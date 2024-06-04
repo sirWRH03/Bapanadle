@@ -1,64 +1,38 @@
-import { useState } from 'react';
-import logo from './assets/images/logo.svg';
+import { useState } from "react";
+import GuessIcon from "./GuessIcon";
 
-const App = () => {
-  const [count, setCount] = useState(0);
+export default function App() {
+    const [guessValue, setGuessValue] = useState("");
 
-  return (
-    <div className="text-center selection:bg-green-900">
-      <header className="flex min-h-screen flex-col items-center justify-center bg-[#282c34] text-white">
-        <img
-          src={logo}
-          className="animate-speed h-60 motion-safe:animate-spin"
-          alt="logo"
-        />
-        <style>
-          {
-            '\
-            .animate-speed{\
-              animation-duration:20s;\
-            }\
-          '
-          }
-        </style>
-        <p className="bg-gradient-to-r from-emerald-300 to-sky-300 bg-clip-text text-5xl font-black text-transparent selection:bg-transparent">
-          Vite + React + Typescript + Tailwindcss
-        </p>
-        <p className="mt-3">
-          <button
-            type="button"
-            className="my-6 rounded bg-gray-300 px-2 py-2 text-[#282C34] transition-all hover:bg-gray-200"
-            onClick={() => setCount((count) => count + 1)}
-          >
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code className="text-[#8d96a7]">App.tsx</code> and save to test
-          HMR updates.
-        </p>
-        <p className="mt-3 flex gap-3 text-center text-[#8d96a7]">
-          <a
-            className="text-[#61dafb] transition-all hover:text-blue-400"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="text-[#61dafb] transition-all hover:text-blue-400"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
-    </div>
-  );
-};
+    function handleKeyDown(e: React.KeyboardEvent) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            handleGuess();
+        }
+    }
 
-export default App;
+    function handleSubmit(e: React.FormEvent) {
+        e.preventDefault();
+        handleGuess();
+    }
+
+    function handleGuess() {
+        return;
+    }
+
+    return (
+        <div className="grid grid-flow-row auto-rows-max justify-items-center h-screen bg-gray-700">
+            <div className="text-xl text-center">
+                Bapanadle
+            </div>
+            <form className="flex flex-row place-content-center place-items-center space-x-2 h-16 w-1/4 mt-12" method="post" onSubmit={handleSubmit}>
+                <div className="flex basis-1/6 h-32"><GuessIcon guess={guessValue} /></div>
+                <input className="basis-4/6 h-8 rounded" type="text" name="guess" value={guessValue} onKeyDown={handleKeyDown} onChange={e => setGuessValue(e.target.value)}></input>
+                <button className="basis-1/6 h-8 rounded bg-green-400 hover:bg-green-500" type="submit">Submit</button>
+            </form>
+            <ol>
+
+            </ol>
+        </div>
+    );
+}
