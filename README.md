@@ -1,1 +1,1 @@
-![alt text](https://github.com/stwalt/bapanadle/blob/main/assets/images/Iselda.png?raw=true)
+![Iselda :(](https://github.com/stwalt/bapanadle/blob/main/src/assets/images/Iselda.png?raw=true)
