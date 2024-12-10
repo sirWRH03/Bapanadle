@@ -13,4 +13,5 @@ export default defineConfig({
       '@': path.resolve('./src'),
     },
   },
+  publicDir: 'publicAssets'
 });
