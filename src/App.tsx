@@ -1,5 +1,5 @@
 import { useState } from "react";
-import GuessIcon from "./GuessIcon";
+import GuessIcon from "./components/GuessIcon";
 import axios from "axios";
 
 
@@ -11,6 +11,8 @@ export default function App() {
     const [guessValue, setGuessValue] = useState("");
     const [resultMessage, setResultMessage] = useState("");
     const [results, setResults] = useState<{ character_name: string }[]>([]);
+
+    resultMessage; // will be deleted
 
     function handleKeyDown(e: React.KeyboardEvent) {
         if (e.key === "Enter") {
