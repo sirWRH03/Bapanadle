@@ -4,7 +4,7 @@ export default function GuessIcon({ guess }: { guess: string }) {
     const formattedGuess = capitalizedGuess.replace(/\s\s+/g, " ").replace(/\s/g, "_");
 
     const imageName = names.includes(formattedGuess) ? formattedGuess : "Unknown";
-    const imageSrc = `/src/assets/characterIcons/${imageName}.png`;
+    const imageSrc = `/characterIcons/${imageName}.png`;
 
     return (
         <img src={imageSrc} className="object-contain object-center max-w-full max-h-full h-auto"></img>
