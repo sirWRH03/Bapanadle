@@ -12,6 +12,7 @@ const pool = mysql.createPool({
     password: process.env.PASSWORD,
     database: process.env.DATABASE
 }).promise();
+
 app.use(cors());
 
 app.get('/api/characters', async (req, res) => {
@@ -30,6 +31,6 @@ app.get('/api/characters', async (req, res) => {
 
     }
 });
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
     console.log(`Server is running on ${port}`);
 })
