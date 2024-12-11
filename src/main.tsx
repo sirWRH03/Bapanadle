@@ -1,8 +1,9 @@
-import { StrictMode } from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App";
-import "./index.css";
-
+import { StrictMode } from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import './index.css';
+// import { ThemeProvider } from '@mui/material/styles';
+// import { themeOptions } from './themeOptions';
 // Firebase!
 import { initializeApp } from "firebase/app";
 const firebaseConfig = {
@@ -21,6 +22,8 @@ const root = ReactDOM.createRoot(rootElement);
 
 root.render(
     <StrictMode>
-        <App />
+        {/* <ThemeProvider theme={createTheme(themeOptions)}> */}
+            <App />
+        {/* </ThemeProvider> */}
     </StrictMode>,
 );
