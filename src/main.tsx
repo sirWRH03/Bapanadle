@@ -2,6 +2,7 @@ import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
+// import { themeOptions } from './themeOptions';
 
 // Firebase!
 import { initializeApp } from "firebase/app";
@@ -20,7 +21,9 @@ const rootElement = document.getElementById('root') as HTMLElement;
 const root = ReactDOM.createRoot(rootElement);
 
 root.render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
+    <StrictMode>
+        {/* <ThemeProvider theme={createTheme(themeOptions)}> */}
+            <App />
+        {/* </ThemeProvider> */}
+    </StrictMode>,
 );
