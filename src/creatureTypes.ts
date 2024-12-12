@@ -25,7 +25,7 @@ type AttackType = "None" | "Melee" | "Ranged" | "Summon" | "Bomb";
 
 type Release = "Base Game" | "Godhome" | "Grimm Troupe" | "Lifeblood" | "Hidden Dreams";
 
-interface Creature {
+const Creature = {
     id: number;
     name: string;
     creatureTypes: CreatureType[];
@@ -35,3 +35,7 @@ interface Creature {
     releases: Release[];
     geo: number;
 }
+
+type Creature = typeof Creature;
+
+

@@ -26,7 +26,7 @@ const creatures: Creature[] = [
         areas: ["Fungal Wastes"],
         attackTypes: ["None"],
         health: 12,
-        releases: ["Base Game"],
+        releases: ["Base Game", "Godhome"],
         geo: 2,
     },
 ];
