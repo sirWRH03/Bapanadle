@@ -36,20 +36,25 @@ export default function GuessBar({ guesses, guess }: { guesses: number[]; guess:
                                     key={key}
                                     component="li"
                                     sx={{
-                                        "& > img": {
+                                        "& > creatureIcon": {
                                             mr: 2,
                                             flexShrink: 0,
                                         },
                                     }}
                                     {...optionProps}
                                 >
-                                    <img
-                                        loading="eager"
-                                        width="100"
-                                        srcSet={`/characterIcons/${creature.name.replace(" ", "_")}.png 2x`}
-                                        src={`/characterIcons/${creature.name.replace(" ", "_")}.png`}
-                                        alt={`Picture of ${creature.name}`}
-                                    />
+                                    <Box
+                                        className="creatureIcon"
+                                        sx={{
+                                            width: 100,
+                                            height: 100,
+                                            mr: 2,
+                                            backgroundImage: `url(/characterIcons/${creature.name.replace(" ", "_")}.png)`,
+                                            backgroundRepeat: "no-repeat",
+                                            backgroundSize: "contain",
+                                            backgroundPosition: "center",
+                                        }}
+                                    ></Box>
                                     {creature.name}
                                 </Box>
                             );

@@ -12,6 +12,7 @@ export default function Header() {
                 alignItems: "center",
                 paddingTop: "1.15rem",
                 paddingBottom: "1.15rem",
+                flex: "0 1 auto"
             }}
         >
             {/*<img style={{ height: 95, width: 95 }} src={iselda} alt="Iselda" /> */}
