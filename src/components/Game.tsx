@@ -7,6 +7,7 @@ import GuessBar from "./GuessBar.tsx";
 import GuessGrid from "./GuessGrid.tsx";
 
 import creatures from "../creatures.ts";
+import Box from "@mui/material/Box";
 
 const findAccuracy = (guessArr: string[], answerArr: string[]): GuessAccuracy => {
     if (guessArr.length === answerArr.length && guessArr.every((guess) => answerArr.includes(guess))) return "Full";
@@ -19,6 +20,8 @@ const determineAccuracies = (guessID: number, answerID: number): GuessAccuracy[]
 
     const g = creatures[guessID];
     const a = creatures[answerID];
+    console.log(g);
+    console.log(a);
 
     const accuracies: GuessAccuracy[] = [
         "None",
@@ -30,6 +33,7 @@ const determineAccuracies = (guessID: number, answerID: number): GuessAccuracy[]
         g.geo === a.geo ? "Full" : g.geo < a.geo ? "Less" : "Greater",
     ];
 
+    console.log(accuracies);
     return accuracies;
 };
 
@@ -69,7 +73,7 @@ export default function Game() {
     //         console.log("Error getting data");
     //     }
     // }
-    const answerID = creatures[Math.floor(Math.random() * creatures.length)].id;
+    const [answerID, setAnswerID] = useState<number>(creatures[Math.floor(Math.random() * creatures.length)].id);
     const [guesses, setGuesses] = useState<number[]>([]);
 
     const guessRowsData: GuessRowData[] = guesses.map((id) => ({
@@ -78,11 +82,13 @@ export default function Game() {
     }));
 
     return (
-        <Container maxWidth="md">
-            <Stack direction="column" spacing={2} sx={{ justifyContent: "center", alignItems: "center" }}>
-                <GuessBar guesses={guesses} guess={guess} />
-                <GuessGrid guessRowsData={guessRowsData} />
-            </Stack>
-        </Container>
+        <Box flex="1 1 auto">
+            <Container maxWidth="md">
+                <Stack direction="column" spacing={2} sx={{ justifyContent: "center", alignItems: "center" }}>
+                    <GuessBar guesses={guesses} guess={guess} />
+                    <GuessGrid guessRowsData={guessRowsData} />
+                </Stack>
+            </Container>
+        </Box>
     );
 }

@@ -17,7 +17,7 @@ export const themeOptions: ThemeOptions = {
             main: "#C23345",
         },
         warning: {
-            main: "#FF7B39",
+            main: "#C49A1b",
         },
         success: {
             main: "#2e7d32",
