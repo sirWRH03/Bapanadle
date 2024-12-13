@@ -32,6 +32,7 @@ export default function App() {
     const [answerID, setAnswerID] = React.useState<number>(localAnswerID);
     const [dailyAccuracies, setDailyAccuracies] = React.useState<GuessAccuracy[][]>(localDailyAccuracies);
     const [isGameOver, setIsGameOver] = React.useState<boolean>(false);
+
     console.log(answerID);
 
     return (
