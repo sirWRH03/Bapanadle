@@ -30,7 +30,7 @@ function createShares(guessAccuracyGrid: GuessAccuracy[][]) {
     }
     const headerText = `I guessed the Bapanadle in ${numGuesses} ${numGuesses > 1 ? "tries" : "try"}!`;
     shareText = headerText + "\n" + shareText;
-    shareText += "\n" + "https://bapanadle.com";
+    shareText += "https://bapanadle.com";
     shareJSX.push(<p>{headerText}</p>);
     shareJSX.reverse();
     shareJSX.push(<p>https://bapanadle.com</p>);
@@ -41,11 +41,10 @@ function createShares(guessAccuracyGrid: GuessAccuracy[][]) {
 }
 
 function copyToClipboard(shareText: string) {
-    console.log(shareText);
     navigator.clipboard.writeText(shareText.toString());
 }
 
-export default function DailyWinModal({
+export default function ShareModal({
     open,
     handleClose,
     dailyAccuracies,
