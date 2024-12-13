@@ -27,7 +27,9 @@ module.exports = {
         "plugin:prettier/recommended",
         "eslint-config-prettier",
     ],
-    rules: {},
+    rules: {
+        "react/prop-types": "off",
+    },
     ignorePatterns: ["dist", "node_modules", ".eslintrc.cjs", "eslint.config.js"],
     globals: {
         Edit: "writable",

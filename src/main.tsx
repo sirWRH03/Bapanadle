@@ -27,6 +27,14 @@ await Promise.all([getCreatures(), getTodaysCreature()]).catch((err) => {
     alert("Failed to get creature data. Please refresh to try again.");
 });
 
+// for (const creature of JSON.parse(localStorage.getItem("creatures") ?? "")) {
+//     const link = document.createElement("link");
+//     link.rel = "preload";
+//     link.as = "image";
+//     link.href = `/characterIcons/${creature.name.replaceAll(" ", "_").replaceAll("'", "")}.png)`;
+//     document.head.appendChild(link);
+// }
+
 const rootElement = document.getElementById("root") as HTMLElement;
 const root = ReactDOM.createRoot(rootElement);
 

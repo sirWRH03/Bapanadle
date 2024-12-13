@@ -10,7 +10,15 @@ let creatures: Creature[] = [];
 const localCreatures = localStorage.getItem("creatures");
 if (localCreatures !== null) creatures = JSON.parse(localCreatures) as Creature[];
 
-export default function GuessBar({ guesses, onGuess }: { guesses: number[]; onGuess: (creature: Creature) => void }) {
+export default function GuessBar({
+    guesses,
+    onGuess,
+    isGameOver,
+}: {
+    guesses: number[];
+    onGuess: (creature: Creature) => void;
+    isGameOver: boolean;
+}) {
     const options = creatures.filter((creature) => !guesses.includes(creature.id));
     const [guessValue, setGuessValue] = useState<Creature | null>(null);
 
@@ -24,18 +32,19 @@ export default function GuessBar({ guesses, onGuess }: { guesses: number[]; onGu
             <form action={guess}>
                 <Stack direction="row" spacing={0.5} sx={{ width: 500 }}>
                     <Autocomplete
-                        sx={{ width: 400 }}
+                        sx={{ width: 400, backgroundColor: "rgba(38, 45, 59, 0.5)" }}
                         value={guessValue || null}
                         onChange={(_, newGuessValue) => setGuessValue(newGuessValue)}
                         options={options}
                         autoHighlight
                         openOnFocus
-                        disabled={options.length === 0}
+                        disabled={options.length === 0 || isGameOver}
                         getOptionLabel={(creature) => creature.name}
                         renderOption={(props, creature) => {
-                            const { ...optionProps } = props;
+                            const { key, ...optionProps } = props;
                             return (
                                 <Box
+                                    key={key}
                                     component="li"
                                     sx={{
                                         "& > creatureIcon": {
@@ -51,7 +60,9 @@ export default function GuessBar({ guesses, onGuess }: { guesses: number[]; onGu
                                             width: 100,
                                             height: 100,
                                             mr: 2,
-                                            backgroundImage: `url(/characterIcons/${creature.name.replaceAll(" ", "_")}.png)`,
+                                            backgroundImage: `url(/characterIcons/${creature.name
+                                                .replaceAll(" ", "_")
+                                                .replaceAll("'", "")}.png)`,
                                             backgroundRepeat: "no-repeat",
                                             backgroundSize: "contain",
                                             backgroundPosition: "center",
