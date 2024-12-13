@@ -49,7 +49,7 @@ root.render(
 
 // Async API calls and processing
 async function getCreatures() {
-    const response = await axios.get("http://3.145.138.93:8080/api/creatures");
+    const response = await axios.get("https://api.bapanadle.com/api/creatures");
     return processCreatures(response.data.data);
 }
 function processCreatures(rawCreatures: RawCreature[]) {
@@ -69,7 +69,7 @@ function processCreatures(rawCreatures: RawCreature[]) {
 }
 
 async function getTodaysCreature() {
-    const response = await axios.get("http://3.145.138.93:8080/api/dailycreature");
+    const response = await axios.get("https://api.bapanadle.com/api/dailycreature");
     return processTodaysCreature(response.data.data[0].creature_id);
 }
 
