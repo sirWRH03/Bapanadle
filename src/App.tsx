@@ -4,12 +4,9 @@ import Footer from "./components/Footer.tsx";
 import Box from "@mui/material/Box";
 import React from "react";
 
-const localIsDailyWon = localStorage.getItem("isDailyWon") === "true";
-const localAnswerID = +(localStorage.getItem("dailyCreature") ?? Math.floor(Math.random() * 223));
-const localDailyAccuracies = JSON.parse(localStorage.getItem("dailyAccuracies") ?? "[]");
-
 export default function App() {
     function onWin(accuracyGrid: GuessAccuracy[][]) {
+        console.log(accuracyGrid);
         if (!isDailyWon) {
             localStorage.setItem("isDailyWon", "true");
             localStorage.setItem("dailyAccuracies", JSON.stringify(accuracyGrid));
@@ -25,10 +22,18 @@ export default function App() {
         console.log(answerID);
     }
 
+    const localIsDailyWon = localStorage.getItem("isDailyWon") === "true";
+    let localAnswerID = 0;
+    if (!localIsDailyWon) localAnswerID = +(localStorage.getItem("dailyCreature") ?? localAnswerID);
+    console.log(`localAnswerID: ${localAnswerID}`);
+    const localDailyAccuracies = JSON.parse(localStorage.getItem("dailyAccuracies") ?? "[]");
+
     const [isDailyWon, setIsDailyWon] = React.useState<boolean>(localIsDailyWon);
     const [answerID, setAnswerID] = React.useState<number>(localAnswerID);
     const [dailyAccuracies, setDailyAccuracies] = React.useState<GuessAccuracy[][]>(localDailyAccuracies);
     const [isGameOver, setIsGameOver] = React.useState<boolean>(false);
+
+    console.log(answerID);
 
     return (
         <>

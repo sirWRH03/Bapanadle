@@ -11,47 +11,61 @@ import { themeOptions } from "./themeOptions.ts";
 import "./index.css";
 
 // Initialize the web app!
-const firebaseConfig = {
-    apiKey: "AIzaSyBOa-U8vaK5jwVdy3kvOUGPa8Y-pjTWdCA",
-    authDomain: "bapanadle.firebaseapp.com",
-    projectId: "bapanadle",
-    storageBucket: "bapanadle.firebasestorage.app",
-    messagingSenderId: "93106692969",
-    appId: "1:93106692969:web:c970591a664a108eb053f8",
-    measurementId: "G-10PDGP8ZHN",
-};
-initializeApp(firebaseConfig);
 
-await Promise.all([getCreatures(), getTodaysCreature()]).catch((err) => {
-    console.log(err);
-    alert("Failed to get creature data. Please refresh to try again.");
-});
+async function init() {
+    const firebaseConfig = {
+        apiKey: "AIzaSyBOa-U8vaK5jwVdy3kvOUGPa8Y-pjTWdCA",
+        authDomain: "bapanadle.firebaseapp.com",
+        projectId: "bapanadle",
+        storageBucket: "bapanadle.firebasestorage.app",
+        messagingSenderId: "93106692969",
+        appId: "1:93106692969:web:c970591a664a108eb053f8",
+        measurementId: "G-10PDGP8ZHN",
+    };
+    initializeApp(firebaseConfig);
 
-// for (const creature of JSON.parse(localStorage.getItem("creatures") ?? "")) {
-//     const link = document.createElement("link");
-//     link.rel = "preload";
-//     link.as = "image";
-//     link.href = `/characterIcons/${creature.name.replaceAll(" ", "_").replaceAll("'", "")}.png)`;
-//     document.head.appendChild(link);
-// }
+    try {
+        const creatureResponse = await getCreatures();
+        processCreatures(creatureResponse.data.data);
+        const todaysCreatureResponse = await getTodaysCreature();
+        processTodaysCreature(todaysCreatureResponse.data.data[0].creature_id);
+    } catch (e) {
+        console.log(e);
+        alert("Failed to get creature data. Please refresh to try again.");
+    }
 
-const rootElement = document.getElementById("root") as HTMLElement;
-const root = ReactDOM.createRoot(rootElement);
+    // for (const creature of JSON.parse(localStorage.getItem("creatures") ?? "")) {
+    //     const link = document.createElement("link");
+    //     link.rel = "preload";
+    //     link.as = "image";
+    //     link.href = `/characterIcons/${creature.name.replaceAll(" ", "_").replaceAll("'", "")}.png)`;
+    //     document.head.appendChild(link);
+    // }
 
-root.render(
-    <StrictMode>
-        <ThemeProvider theme={createTheme(themeOptions)}>
-            <CssBaseline />
-            <App />
-        </ThemeProvider>
-    </StrictMode>,
-);
+    const rootElement = document.getElementById("root") as HTMLElement;
+    const root = ReactDOM.createRoot(rootElement);
+
+    root.render(
+        <StrictMode>
+            <ThemeProvider theme={createTheme(themeOptions)}>
+                <CssBaseline />
+                <App />
+            </ThemeProvider>
+        </StrictMode>,
+    );
+}
 
 // Async API calls and processing
-async function getCreatures() {
+const getCreatures = async () => {
     const response = await axios.get("https://api.bapanadle.com/api/creatures");
-    return processCreatures(response.data.data);
-}
+    return response;
+};
+
+const getTodaysCreature = async () => {
+    const response = await axios.get("https://api.bapanadle.com/api/dailycreature");
+    return response;
+};
+
 function processCreatures(rawCreatures: RawCreature[]) {
     const creatures: Creature[] = rawCreatures.map((rc: RawCreature) => {
         return {
@@ -68,11 +82,6 @@ function processCreatures(rawCreatures: RawCreature[]) {
     localStorage.setItem("creatures", JSON.stringify(creatures));
 }
 
-async function getTodaysCreature() {
-    const response = await axios.get("https://api.bapanadle.com/api/dailycreature");
-    return processTodaysCreature(response.data.data[0].creature_id);
-}
-
 function processTodaysCreature(rawCreatureID: number) {
     const todaysCreatureID = rawCreatureID - 1;
     const localCreature = localStorage.getItem("dailyCreature");
@@ -80,3 +89,5 @@ function processTodaysCreature(rawCreatureID: number) {
     if (localCreature && +localCreature !== todaysCreatureID) localStorage.setItem("isDailyWon", "false");
     localStorage.setItem("dailyCreature", todaysCreatureID.toString());
 }
+
+init();

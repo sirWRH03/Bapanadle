@@ -49,13 +49,12 @@ export default function Game({
     isDailyWon: boolean;
     isGameOver: boolean;
     dailyAccuracies: GuessAccuracy[][];
-    onWin: (accuracygrid: GuessAccuracy[][]) => void;
+    onWin: (accuracyGrid: GuessAccuracy[][]) => void;
     onNewGame: () => void;
 }) {
     function onGuess(creature: Creature) {
         if (creature !== undefined) {
-            setGuesses((prevGuesses) => [...prevGuesses, creature.id]);
-            if (creature.id === answerID) onWin(guesses.map((id) => determineAccuracies(id, answerID)));
+            setGuesses([...guesses, creature.id]);
         }
     }
 
@@ -74,6 +73,10 @@ export default function Game({
     const [guesses, setGuesses] = React.useState<number[]>([]);
     const [isDailyWinModalOpen, setisDailyWinModalOpen] = React.useState<boolean>(false);
 
+    React.useEffect(() => {
+        if (guesses.length > 0 && guesses.at(-1) === answerID) onWin(guesses.map((id) => determineAccuracies(id, answerID)));
+    }, [JSON.stringify(guesses)]);
+
     const guessRowsData: GuessRowData[] = guesses.map((id) => ({
         creature: creatures[id],
         accuracies: determineAccuracies(id, answerID),
@@ -83,13 +86,24 @@ export default function Game({
         <Box flex="1 1 auto">
             <Container maxWidth="md">
                 <Stack direction="column" spacing={2} sx={{ justifyContent: "center", alignItems: "center" }}>
-                    {!isGameOver && <GuessBar guesses={guesses} onGuess={onGuess} isGameOver={isGameOver} />}
-                    <GuessGrid guessRowsData={guessRowsData} />
-                    {isGameOver && <Button onClick={newGame}>Play Again</Button>}
                     {isDailyWon && (
                         <Button variant="contained" onClick={handleOpenModal} color="success">
                             Share Daily
                             <ShareIcon />
+                        </Button>
+                    )}
+                    {!isGameOver && <GuessBar guesses={guesses} onGuess={onGuess} isGameOver={isGameOver} />}
+                    <GuessGrid guessRowsData={guessRowsData} />
+                    {isGameOver && (
+                        <Button
+                            size="large"
+                            onClick={newGame}
+                            variant="contained"
+                            sx={{
+                                backgroundColor: "secondary",
+                            }}
+                        >
+                            Play Again
                         </Button>
                     )}
                     {isDailyWon && (
