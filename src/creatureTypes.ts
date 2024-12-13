@@ -35,3 +35,14 @@ interface Creature {
     releases: Release[];
     geo: number;
 }
+
+interface RawCreature {
+    creature_id: number;
+    name: string;
+    creatureTypes: string;
+    areas: string;
+    attackTypes: string;
+    health: number;
+    releases: string;
+    geo: number;
+}

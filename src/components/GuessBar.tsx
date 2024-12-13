@@ -5,20 +5,23 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import creatures from "../creatures.ts";
 
-export default function GuessBar({ guesses, guess }: { guesses: number[]; guess: (creature: Creature) => void }) {
+let creatures: Creature[] = [];
+const localCreatures = localStorage.getItem("creatures");
+if (localCreatures !== null) creatures = JSON.parse(localCreatures) as Creature[];
+
+export default function GuessBar({ guesses, onGuess }: { guesses: number[]; onGuess: (creature: Creature) => void }) {
     const options = creatures.filter((creature) => !guesses.includes(creature.id));
     const [guessValue, setGuessValue] = useState<Creature | null>(null);
 
-    function onGuess() {
-        if (guessValue !== null && options.includes(guessValue)) guess(guessValue);
+    function guess() {
+        if (guessValue !== null && options.includes(guessValue)) onGuess(guessValue);
         setGuessValue(null);
     }
 
     return (
         <>
-            <form action={onGuess}>
+            <form action={guess}>
                 <Stack direction="row" spacing={0.5} sx={{ width: 500 }}>
                     <Autocomplete
                         sx={{ width: 400 }}
@@ -49,7 +52,7 @@ export default function GuessBar({ guesses, guess }: { guesses: number[]; guess:
                                             width: 100,
                                             height: 100,
                                             mr: 2,
-                                            backgroundImage: `url(/characterIcons/${creature.name.replace(" ", "_")}.png)`,
+                                            backgroundImage: `url(/characterIcons/${creature.name.replaceAll(" ", "_")}.png)`,
                                             backgroundRepeat: "no-repeat",
                                             backgroundSize: "contain",
                                             backgroundPosition: "center",
