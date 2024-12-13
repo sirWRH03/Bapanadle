@@ -6,7 +6,7 @@ import React from "react";
 
 const localIsDailyWon = localStorage.getItem("isDailyWon") === "true";
 const localAnswerID = +(localStorage.getItem("dailyCreature") ?? Math.floor(Math.random() * 223));
-const localDailyAccuracies = JSON.parse(localStorage.getItem("dailyAccuracies") ?? "");
+const localDailyAccuracies = JSON.parse(localStorage.getItem("dailyAccuracies") ?? "[]");
 
 export default function App() {
     function onWin(accuracyGrid: GuessAccuracy[][]) {
