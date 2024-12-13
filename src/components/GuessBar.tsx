@@ -33,10 +33,9 @@ export default function GuessBar({ guesses, onGuess }: { guesses: number[]; onGu
                         disabled={options.length === 0}
                         getOptionLabel={(creature) => creature.name}
                         renderOption={(props, creature) => {
-                            const { key, ...optionProps } = props;
+                            const { ...optionProps } = props;
                             return (
                                 <Box
-                                    key={key}
                                     component="li"
                                     sx={{
                                         "& > creatureIcon": {

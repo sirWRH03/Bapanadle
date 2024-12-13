@@ -22,7 +22,10 @@ const firebaseConfig = {
 };
 initializeApp(firebaseConfig);
 
-await Promise.all([getCreatures(), getTodaysCreature()]);
+await Promise.all([getCreatures(), getTodaysCreature()]).catch((err) => {
+    console.log(err);
+    alert("Failed to get creature data. Please refresh to try again.");
+});
 
 const rootElement = document.getElementById("root") as HTMLElement;
 const root = ReactDOM.createRoot(rootElement);
