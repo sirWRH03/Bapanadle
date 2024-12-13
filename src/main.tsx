@@ -41,7 +41,7 @@ root.render(
 
 // Async API calls and processing
 async function getCreatures() {
-    const response = await axios.get("http://3.145.138.93:808/api/creatures");
+    const response = await axios.get("http://3.145.138.93:8080/api/creatures");
     return processCreatures(response.data.data);
 }
 function processCreatures(rawCreatures: RawCreature[]) {
