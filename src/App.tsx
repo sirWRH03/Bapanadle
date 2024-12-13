@@ -4,29 +4,31 @@ import Footer from "./components/Footer.tsx";
 import Box from "@mui/material/Box";
 import React from "react";
 
-let localIsDailyWon = false;
-if (localStorage.getItem("isDailyWon") === "true") localIsDailyWon = true;
+const localIsDailyWon = localStorage.getItem("isDailyWon") === "true";
+const localAnswerID = +(localStorage.getItem("dailyCreature") ?? Math.floor(Math.random() * 223));
+const localDailyAccuracies = JSON.parse(localStorage.getItem("dailyAccuracies") ?? "");
 
 export default function App() {
-    function onWin() {
+    function onWin(accuracyGrid: GuessAccuracy[][]) {
         if (!isDailyWon) {
-            setIsDailyWon(true);
             localStorage.setItem("isDailyWon", "true");
+            localStorage.setItem("dailyAccuracies", JSON.stringify(accuracyGrid));
+            setDailyAccuracies(accuracyGrid);
+            setIsDailyWon(true);
         }
+        setIsGameOver(true);
+    }
+
+    function onNewGame() {
+        setIsGameOver(false);
+        setAnswerID(Math.floor(Math.random() * 223));
+        console.log(answerID);
     }
 
     const [isDailyWon, setIsDailyWon] = React.useState<boolean>(localIsDailyWon);
-    const dailyWinSection = React.useRef<null | HTMLDivElement>(null);
-
-    let answerID = 0;
-    if (!isDailyWon) answerID = +(localStorage.getItem("dailyCreature") ?? 0);
-    else answerID = Math.floor(Math.random() * 233);
-
-    React.useEffect(() => {
-        if (isDailyWon && dailyWinSection.current !== null) {
-            dailyWinSection.current.scrollIntoView();
-        }
-    }, [isDailyWon]);
+    const [answerID, setAnswerID] = React.useState<number>(localAnswerID);
+    const [dailyAccuracies, setDailyAccuracies] = React.useState<GuessAccuracy[][]>(localDailyAccuracies);
+    const [isGameOver, setIsGameOver] = React.useState<boolean>(false);
 
     return (
         <>
@@ -43,7 +45,14 @@ export default function App() {
                 }}
             >
                 <Header />
-                <Game answerID={answerID} onWin={onWin} isDailyWon={isDailyWon} dailyWinSection={dailyWinSection} />
+                <Game
+                    answerID={answerID}
+                    isDailyWon={isDailyWon}
+                    isGameOver={isGameOver}
+                    dailyAccuracies={dailyAccuracies}
+                    onWin={onWin}
+                    onNewGame={onNewGame}
+                />
                 <Footer />
             </Box>
         </>

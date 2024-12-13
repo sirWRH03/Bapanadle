@@ -1,5 +1,19 @@
 import { ThemeOptions } from "@mui/material/styles";
 
+declare module "@mui/material/styles" {
+    interface Theme {
+        slate: {
+            main: string;
+        };
+    }
+    // allow configuration using `createTheme()`
+    interface ThemeOptions {
+        slate?: {
+            main: string;
+        };
+    }
+}
+
 export const themeOptions: ThemeOptions = {
     palette: {
         mode: "dark",
@@ -26,5 +40,8 @@ export const themeOptions: ThemeOptions = {
     },
     typography: {
         fontFamily: "Noto Serif",
+    },
+    slate: {
+        main: "#27313E",
     },
 };

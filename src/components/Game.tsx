@@ -2,11 +2,13 @@ import React from "react";
 
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import ShareIcon from "@mui/icons-material/Share";
 
 import GuessBar from "./GuessBar.tsx";
 import GuessGrid from "./GuessGrid.tsx";
-import DailyWinSection from "./DailyWinSection.tsx";
+import ShareModal from "./ShareModal.tsx";
 
 let creatures: Creature[] = [];
 const localCreatures = localStorage.getItem("creatures");
@@ -18,7 +20,7 @@ const findAccuracy = (guessArr: string[], answerArr: string[]): GuessAccuracy =>
     else return "None";
 };
 
-const determineAccuracies = (guessID: number, answerID: number): GuessAccuracy[] => {
+function determineAccuracies(guessID: number, answerID: number): GuessAccuracy[] {
     if (guessID === answerID) return ["Full", "Full", "Full", "Full", "Full", "Full", "Full"];
     const g = creatures[guessID];
     const a = creatures[answerID];
@@ -33,36 +35,44 @@ const determineAccuracies = (guessID: number, answerID: number): GuessAccuracy[]
     ];
 
     return accuracies;
-};
+}
 
 export default function Game({
     answerID,
-    onWin,
     isDailyWon,
-    dailyWinSection,
+    isGameOver,
+    dailyAccuracies,
+    onWin,
+    onNewGame,
 }: {
     answerID: number;
-    onWin: () => void;
     isDailyWon: boolean;
-    dailyWinSection: React.RefObject<HTMLDivElement | null>;
+    isGameOver: boolean;
+    dailyAccuracies: GuessAccuracy[][];
+    onWin: (accuracygrid: GuessAccuracy[][]) => void;
+    onNewGame: () => void;
 }) {
     function onGuess(creature: Creature) {
         if (creature !== undefined) {
             setGuesses((prevGuesses) => [...prevGuesses, creature.id]);
-            if (creature.id === answerID) winGame();
+            if (creature.id === answerID) onWin(guesses.map((id) => determineAccuracies(id, answerID)));
         }
     }
 
-    function winGame() {
-        if (!isDailyWon) {
-            setFinalDailyGuessAccuracies(guesses.map((guessID) => determineAccuracies(guessID, answerID)));
-            localStorage.setItem("finalDailyGuessAccuracies", JSON.stringify(finalDailyGuessAccuracies));
-        }
-        onWin();
+    function newGame() {
+        setGuesses([]);
+        onNewGame();
+    }
+
+    function handleOpenModal() {
+        setisDailyWinModalOpen(true);
+    }
+    function handleCloseModal() {
+        setisDailyWinModalOpen(false);
     }
 
     const [guesses, setGuesses] = React.useState<number[]>([]);
-    const [finalDailyGuessAccuracies, setFinalDailyGuessAccuracies] = React.useState<GuessAccuracy[][]>([]);
+    const [isDailyWinModalOpen, setisDailyWinModalOpen] = React.useState<boolean>(false);
 
     const guessRowsData: GuessRowData[] = guesses.map((id) => ({
         creature: creatures[id],
@@ -73,9 +83,18 @@ export default function Game({
         <Box flex="1 1 auto">
             <Container maxWidth="md">
                 <Stack direction="column" spacing={2} sx={{ justifyContent: "center", alignItems: "center" }}>
-                    <GuessBar guesses={guesses} onGuess={onGuess} />
+                    {!isGameOver && <GuessBar guesses={guesses} onGuess={onGuess} isGameOver={isGameOver} />}
                     <GuessGrid guessRowsData={guessRowsData} />
-                    {isDailyWon && <DailyWinSection ref={dailyWinSection} guessAccuracyGrid={finalDailyGuessAccuracies} />}
+                    {isGameOver && <Button onClick={newGame}>Play Again</Button>}
+                    {isDailyWon && (
+                        <Button variant="contained" onClick={handleOpenModal} color="success">
+                            Share Daily
+                            <ShareIcon />
+                        </Button>
+                    )}
+                    {isDailyWon && (
+                        <ShareModal open={isDailyWinModalOpen} handleClose={handleCloseModal} dailyAccuracies={dailyAccuracies} />
+                    )}
                 </Stack>
             </Container>
         </Box>

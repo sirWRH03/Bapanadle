@@ -16,7 +16,7 @@ export default function Header() {
             }}
         >
             {/*<img style={{ height: 95, width: 95 }} src={iselda} alt="Iselda" /> */}
-            <img style={{ height: 70, width: 606 }} src={logo} alt="Bapanadle logo" />
+            <img style={{ height: 288, width: 707 }} src={logo} alt="Bapanadle logo" />
         </Box>
     );
 }
