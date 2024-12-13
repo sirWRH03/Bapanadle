@@ -22,7 +22,10 @@ const firebaseConfig = {
 };
 initializeApp(firebaseConfig);
 
-await Promise.all([getCreatures(), getTodaysCreature()]);
+await Promise.all([getCreatures(), getTodaysCreature()]).catch((err) => {
+    console.log(err);
+    alert("Failed to get creature data. Please refresh to try again.");
+});
 
 const rootElement = document.getElementById("root") as HTMLElement;
 const root = ReactDOM.createRoot(rootElement);
@@ -38,7 +41,7 @@ root.render(
 
 // Async API calls and processing
 async function getCreatures() {
-    const response = await axios.get("http://3.145.138.93:8080/api/creatures");
+    const response = await axios.get("http://3.145.138.93:808/api/creatures");
     return processCreatures(response.data.data);
 }
 function processCreatures(rawCreatures: RawCreature[]) {
