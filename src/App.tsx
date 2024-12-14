@@ -5,6 +5,13 @@ import Box from "@mui/material/Box";
 import React from "react";
 
 export default function App() {
+    /**
+     * Handles the win condition.
+     *
+     * @param accuracyGrid The accuracies of the guesses.
+     * @returns No return value.
+     *
+     */
     function onWin(accuracyGrid: GuessAccuracy[][]) {
         console.log(accuracyGrid);
         if (!isDailyWon) {
@@ -16,6 +23,12 @@ export default function App() {
         setIsGameOver(true);
     }
 
+    /**
+     * Handles the new game condition.
+     *
+     * @returns No return value.
+     *
+     */
     function onNewGame() {
         setIsGameOver(false);
         setAnswerID(Math.floor(Math.random() * 223));
