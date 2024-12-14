@@ -81,7 +81,7 @@ export default function Game({
                             <ShareIcon />
                         </Button>
                     )}
-                    {!isGameOver && <GuessBar guesses={guesses} onGuess={onGuess} isGameOver={isGameOver} />}
+                    {!isGameOver && <GuessBar guesses={guesses} onGuess={onGuess} />}
                     <GuessGrid guessRowsData={guessRowsData} />
                     {isGameOver && (
                         <Button
