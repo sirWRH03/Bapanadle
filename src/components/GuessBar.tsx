@@ -6,25 +6,17 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 
-let creatures: Creature[] = [];
-const localCreatures = localStorage.getItem("creatures");
-if (localCreatures !== null) creatures = JSON.parse(localCreatures) as Creature[];
+export default function GuessBar({ guesses, onGuess }: { guesses: number[]; onGuess: (creature: Creature) => void }) {
+    const creatures: Creature[] = JSON.parse(localStorage.getItem("creatures") ?? "{}");
 
-export default function GuessBar({
-    guesses,
-    onGuess,
-    isGameOver,
-}: {
-    guesses: number[];
-    onGuess: (creature: Creature) => void;
-    isGameOver: boolean;
-}) {
     const options = creatures.filter((creature) => !guesses.includes(creature.id));
     const [guessValue, setGuessValue] = useState<Creature | null>(null);
 
     function guess() {
-        if (guessValue !== null && options.includes(guessValue)) onGuess(guessValue);
-        setGuessValue(null);
+        if (guessValue !== null) {
+            onGuess(guessValue);
+            setGuessValue(null);
+        }
     }
 
     return (
@@ -38,8 +30,9 @@ export default function GuessBar({
                         options={options}
                         autoHighlight
                         openOnFocus
-                        disabled={options.length === 0 || isGameOver}
+                        disabled={options.length === 0}
                         getOptionLabel={(creature) => creature.name}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
                         renderOption={(props, creature) => {
                             const { key, ...optionProps } = props;
                             return (
