@@ -10,28 +10,25 @@ import GuessBar from "./GuessBar.tsx";
 import GuessGrid from "./GuessGrid.tsx";
 import ShareModal from "./ShareModal.tsx";
 
-let creatures: Creature[] = [];
-const localCreatures = localStorage.getItem("creatures");
-if (localCreatures !== null) creatures = JSON.parse(localCreatures) as Creature[];
-
+// Get the accuracy types for properties with multiple values
 const findAccuracy = (guessArr: string[], answerArr: string[]): GuessAccuracy => {
     if (guessArr.length === answerArr.length && guessArr.every((guess) => answerArr.includes(guess))) return "Full";
     else if (guessArr.some((guess) => answerArr.includes(guess))) return "Partial";
     else return "None";
 };
 
-function determineAccuracies(guessID: number, answerID: number): GuessAccuracy[] {
-    if (guessID === answerID) return ["Full", "Full", "Full", "Full", "Full", "Full", "Full"];
-    const g = creatures[guessID];
-    const a = creatures[answerID];
+// Determine the accuracies for a creature based off an answer creature
+function determineAccuracies(guess: Creature, answer: Creature): GuessAccuracy[] {
+    if (guess.id === answer.id) return ["Full", "Full", "Full", "Full", "Full", "Full", "Full"];
+
     const accuracies: GuessAccuracy[] = [
         "None",
-        findAccuracy(g.creatureTypes, a.creatureTypes),
-        findAccuracy(g.areas, a.areas),
-        findAccuracy(g.attackTypes, a.attackTypes),
-        g.health === a.health ? "Full" : g.health < a.health ? "Less" : "Greater",
-        findAccuracy(g.releases, a.releases),
-        g.geo === a.geo ? "Full" : g.geo < a.geo ? "Less" : "Greater",
+        findAccuracy(guess.creatureTypes, answer.creatureTypes),
+        findAccuracy(guess.areas, answer.areas),
+        findAccuracy(guess.attackTypes, answer.attackTypes),
+        guess.health === answer.health ? "Full" : guess.health < answer.health ? "Less" : "Greater",
+        findAccuracy(guess.releases, answer.releases),
+        guess.geo === answer.geo ? "Full" : guess.geo < answer.geo ? "Less" : "Greater",
     ];
 
     return accuracies;
@@ -39,65 +36,57 @@ function determineAccuracies(guessID: number, answerID: number): GuessAccuracy[]
 
 export default function Game({
     answerID,
-    isDailyWon,
     isGameOver,
     dailyAccuracies,
     onWin,
     onNewGame,
 }: {
     answerID: number;
-    isDailyWon: boolean;
     isGameOver: boolean;
     dailyAccuracies: GuessAccuracy[][];
-    onWin: (accuracyGrid: GuessAccuracy[][]) => void;
+    onWin: (accuracies: GuessAccuracy[][]) => void;
     onNewGame: () => void;
 }) {
+    // Load creatures from local storage
+    const creatures: Creature[] = JSON.parse(localStorage.getItem("creatures") ?? "{}");
+
+    // Called on guess when the form submits using the "Submit" button
     function onGuess(creature: Creature) {
         if (creature !== undefined) {
             setGuesses([...guesses, creature.id]);
         }
     }
 
-    function newGame() {
-        setGuesses([]);
-        onNewGame();
-    }
-
-    function handleOpenModal() {
-        setisDailyWinModalOpen(true);
-    }
-    function handleCloseModal() {
-        setisDailyWinModalOpen(false);
-    }
-
     const [guesses, setGuesses] = React.useState<number[]>([]);
-    const [isDailyWinModalOpen, setisDailyWinModalOpen] = React.useState<boolean>(false);
 
     React.useEffect(() => {
-        if (guesses.length > 0 && guesses.at(-1) === answerID) onWin(guesses.map((id) => determineAccuracies(id, answerID)));
-    }, [JSON.stringify(guesses)]);
+        if (guesses.length === 0 && isGameOver) onNewGame();
+        else if (guesses.at(-1) === answerID) onWin(guesses.map((id) => determineAccuracies(creatures[id], creatures[answerID])));
+    }, [guesses.length]);
 
     const guessRowsData: GuessRowData[] = guesses.map((id) => ({
         creature: creatures[id],
-        accuracies: determineAccuracies(id, answerID),
+        accuracies: determineAccuracies(creatures[id], creatures[answerID]),
     }));
+
+    const [isShareModalOpen, setIsShareModalOpen] = React.useState<boolean>(false);
 
     return (
         <Box flex="1 1 auto">
             <Container maxWidth="md">
                 <Stack direction="column" spacing={2} sx={{ justifyContent: "center", alignItems: "center" }}>
-                    {isDailyWon && (
-                        <Button variant="contained" onClick={handleOpenModal} color="success">
+                    {dailyAccuracies.length > 0 && (
+                        <Button variant="contained" onClick={() => setIsShareModalOpen(true)} color="success">
                             Share Daily
                             <ShareIcon />
                         </Button>
                     )}
-                    {!isGameOver && <GuessBar guesses={guesses} onGuess={onGuess} isGameOver={isGameOver} />}
+                    {!isGameOver && <GuessBar guesses={guesses} onGuess={onGuess} />}
                     <GuessGrid guessRowsData={guessRowsData} />
                     {isGameOver && (
                         <Button
                             size="large"
-                            onClick={newGame}
+                            onClick={() => setGuesses([])}
                             variant="contained"
                             sx={{
                                 backgroundColor: "secondary",
@@ -106,8 +95,12 @@ export default function Game({
                             Play Again
                         </Button>
                     )}
-                    {isDailyWon && (
-                        <ShareModal open={isDailyWinModalOpen} handleClose={handleCloseModal} dailyAccuracies={dailyAccuracies} />
+                    {dailyAccuracies.length > 0 && (
+                        <ShareModal
+                            open={isShareModalOpen}
+                            handleClose={() => setIsShareModalOpen(false)}
+                            dailyAccuracies={dailyAccuracies}
+                        />
                     )}
                 </Stack>
             </Container>
