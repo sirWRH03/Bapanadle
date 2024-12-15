@@ -4,6 +4,8 @@ import Footer from "./components/Footer.tsx";
 import Box from "@mui/material/Box";
 import React from "react";
 
+import randomCreatureID from "./randomCreatureID.ts";
+
 export default function App() {
     /**
      * Handles the win condition.
@@ -12,14 +14,8 @@ export default function App() {
      * @returns No return value.
      *
      */
-    function onWin(accuracyGrid: GuessAccuracy[][]) {
-        console.log(accuracyGrid);
-        if (!isDailyWon) {
-            localStorage.setItem("isDailyWon", "true");
-            localStorage.setItem("dailyAccuracies", JSON.stringify(accuracyGrid));
-            setDailyAccuracies(accuracyGrid);
-            setIsDailyWon(true);
-        }
+    function onWin(accuracies: GuessAccuracy[][]) {
+        if (dailyAccuracies.length === 0) setDailyAccuracies(accuracies);
         setIsGameOver(true);
     }
 
@@ -31,22 +27,23 @@ export default function App() {
      */
     function onNewGame() {
         setIsGameOver(false);
-        setAnswerID(Math.floor(Math.random() * 223));
-        console.log(answerID);
+        setAnswerID(randomCreatureID());
     }
 
-    const localIsDailyWon = localStorage.getItem("isDailyWon") === "true";
-    let localAnswerID = 0;
-    if (!localIsDailyWon) localAnswerID = +(localStorage.getItem("dailyCreature") ?? localAnswerID);
-    console.log(`localAnswerID: ${localAnswerID}`);
     const localDailyAccuracies = JSON.parse(localStorage.getItem("dailyAccuracies") ?? "[]");
 
-    const [isDailyWon, setIsDailyWon] = React.useState<boolean>(localIsDailyWon);
-    const [answerID, setAnswerID] = React.useState<number>(localAnswerID);
     const [dailyAccuracies, setDailyAccuracies] = React.useState<GuessAccuracy[][]>(localDailyAccuracies);
+
+    const localDailyCreatureID = +(localStorage.getItem("dailyCreatureID") ?? -1);
+    let startingAnswerID = randomCreatureID();
+    if (dailyAccuracies.length === 0) startingAnswerID = localDailyCreatureID;
+
+    const [answerID, setAnswerID] = React.useState<number>(startingAnswerID);
     const [isGameOver, setIsGameOver] = React.useState<boolean>(false);
 
-    console.log(answerID);
+    React.useEffect(() => {
+        localStorage.setItem("dailyAccuracies", JSON.stringify(dailyAccuracies));
+    }, [dailyAccuracies.length]);
 
     return (
         <>
@@ -63,14 +60,7 @@ export default function App() {
                 }}
             >
                 <Header />
-                <Game
-                    answerID={answerID}
-                    isDailyWon={isDailyWon}
-                    isGameOver={isGameOver}
-                    dailyAccuracies={dailyAccuracies}
-                    onWin={onWin}
-                    onNewGame={onNewGame}
-                />
+                <Game answerID={answerID} isGameOver={isGameOver} dailyAccuracies={dailyAccuracies} onWin={onWin} onNewGame={onNewGame} />
                 <Footer />
             </Box>
         </>

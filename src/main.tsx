@@ -75,7 +75,7 @@ const getTodaysCreature = async () => {
 function processCreatures(rawCreatures: RawCreature[]) {
     const creatures: Creature[] = rawCreatures.map((rc: RawCreature) => {
         return {
-            id: rc.creature_id - 1,
+            id: rc.creature_id - 1, // Database IDs are 1 indexed
             name: rc.name,
             creatureTypes: rc.creatureTypes.split(",") as CreatureType[],
             areas: rc.areas.split(",") as Area[],
@@ -95,11 +95,8 @@ function processCreatures(rawCreatures: RawCreature[]) {
  *
  */
 function processTodaysCreature(rawCreatureID: number) {
-    const todaysCreatureID = rawCreatureID - 1;
-    const localCreature = localStorage.getItem("dailyCreature");
-    // A day has passed or the user cleared their cookies, so the daily hasn't been won yet
-    if (localCreature && +localCreature !== todaysCreatureID) localStorage.setItem("isDailyWon", "false");
-    localStorage.setItem("dailyCreature", todaysCreatureID.toString());
+    const dailyCreatureID = rawCreatureID - 1; // Database IDs are 1 indexed
+    localStorage.setItem("dailyCreatureID", dailyCreatureID.toString());
 }
 
 init();
