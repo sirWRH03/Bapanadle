@@ -17,10 +17,16 @@ const findAccuracy = (guessArr: string[], answerArr: string[]): GuessAccuracy =>
     else return "None";
 };
 
-// Determine the accuracies for a creature based off an answer creature
+/**
+ * Returns an array of accuracies for each category of the guess.
+ *
+ * @param guess The guessed creature
+ * @param answer The correct creature
+ * @returns An array of accuracies for each category of the guess.
+ *
+ */
 function determineAccuracies(guess: Creature, answer: Creature): GuessAccuracy[] {
     if (guess.id === answer.id) return ["Full", "Full", "Full", "Full", "Full", "Full", "Full"];
-
     const accuracies: GuessAccuracy[] = [
         "None",
         findAccuracy(guess.creatureTypes, answer.creatureTypes),

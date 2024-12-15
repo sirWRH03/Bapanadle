@@ -1,6 +1,13 @@
 import { Button, Modal, Stack } from "@mui/material";
 import ContentPasteIcon from "@mui/icons-material/ContentPaste";
 
+/**
+ * Converts the accuracy of a guess to an emoji.
+ *
+ * @param accuracy The accuracy of a guess.
+ * @returns An emoji representing the accuracy.
+ *
+ */
 function convertAccuracyToEmoji(accuracy: GuessAccuracy) {
     switch (accuracy) {
         case "Full":
@@ -16,6 +23,13 @@ function convertAccuracyToEmoji(accuracy: GuessAccuracy) {
     }
 }
 
+/**
+ * Creates the share text and JSX for the share modal.
+ *
+ * @param guessAccuracyGrid The accuracies of the guesses.
+ * @returns The share text and JSX.
+ *
+ */
 function createShares(guessAccuracyGrid: GuessAccuracy[][]) {
     let shareText = "";
     const shareJSX = [];
@@ -40,6 +54,12 @@ function createShares(guessAccuracyGrid: GuessAccuracy[][]) {
     };
 }
 
+/**
+ * Copies the share text to the clipboard.
+ *
+ * @param shareText The text to be copied to the clipboard.
+ * @returns No return value.
+ */
 function copyToClipboard(shareText: string) {
     navigator.clipboard.writeText(shareText.toString());
 }

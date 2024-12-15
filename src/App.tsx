@@ -7,11 +7,24 @@ import React from "react";
 import randomCreatureID from "./randomCreatureID.ts";
 
 export default function App() {
+    /**
+     * Handles the win condition.
+     *
+     * @param accuracyGrid The accuracies of the guesses.
+     * @returns No return value.
+     *
+     */
     function onWin(accuracies: GuessAccuracy[][]) {
         if (dailyAccuracies.length === 0) setDailyAccuracies(accuracies);
         setIsGameOver(true);
     }
 
+    /**
+     * Handles the new game condition.
+     *
+     * @returns No return value.
+     *
+     */
     function onNewGame() {
         setIsGameOver(false);
         setAnswerID(randomCreatureID());

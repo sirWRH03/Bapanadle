@@ -7,6 +7,13 @@ import Grow from "@mui/material/Grow";
 import Box from "@mui/material/Box";
 import { Tooltip, tooltipClasses } from "@mui/material";
 
+/**
+ * Converts the accuracies of a guess to colors for the grid.
+ *
+ * @param accuracies The accuracies of a guess.
+ * @returns An array of colors for the grid.
+ *
+ */
 function convertAccuraciesToColors(accuracies: GuessAccuracy[]) {
     return accuracies.map((accuracy) => {
         switch (accuracy) {
@@ -23,12 +30,25 @@ function convertAccuraciesToColors(accuracies: GuessAccuracy[]) {
     });
 }
 
+/**
+ * Similar to convertAccuraciesToColors, but for the arrows of numerical values.
+ *
+ * @param accuracy The accuracy of a guess.
+ * @returns The arrow component for the grid.
+ */
 function convertAccuracyToArrow(accuracy: GuessAccuracy) {
     if (accuracy === "Greater") return <ArrowDownward />;
     else if (accuracy === "Less") return <ArrowUpward />;
     else return null;
 }
 
+/**
+ * Splits the text of the areas into two parts.
+ *
+ * @param textArr String to be split.
+ * @returns The split string.
+ *
+ */
 function splitText(textArr: string[]) {
     if (textArr.length > 2) return [`${textArr[0]}, ${textArr[1]}...`, `...${textArr.slice(2).join(", ")}`];
     else return [textArr.join(", "), ""];

@@ -66,6 +66,12 @@ const getTodaysCreature = async () => {
     return response;
 };
 
+/**
+ * Processes the raw creature data from the API and stores it in local storage.
+ *
+ * @param rawCreatures The raw creature data from the API.
+ *
+ */
 function processCreatures(rawCreatures: RawCreature[]) {
     const creatures: Creature[] = rawCreatures.map((rc: RawCreature) => {
         return {
@@ -82,6 +88,12 @@ function processCreatures(rawCreatures: RawCreature[]) {
     localStorage.setItem("creatures", JSON.stringify(creatures));
 }
 
+/**
+ * Processes the raw creature ID from the API and stores it in local storage.
+ *
+ * @param rawCreatureID The raw creature ID from the API.
+ *
+ */
 function processTodaysCreature(rawCreatureID: number) {
     const dailyCreatureID = rawCreatureID - 1; // Database IDs are 1 indexed
     localStorage.setItem("dailyCreatureID", dailyCreatureID.toString());
